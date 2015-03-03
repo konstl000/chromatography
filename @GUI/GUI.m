@@ -30,9 +30,6 @@ classdef GUI < handle
             % Functions
             obj.functions = Chromatography;
             
-            % Options
-            obj = settings(obj);
-
             % GUI
             obj = setup(obj);
             obj = callbacks(obj);
@@ -45,7 +42,7 @@ classdef GUI < handle
             filetype = get(varargin{1,1}, 'label');
             
             % Import data
-            obj.data = obj.functions.import(filetype, obj.data, 'progress', 'off');
+            obj.data = obj.functions.import(filetype, 'append', obj.data, 'progress', 'off');
             
             % Initialize GUI data
             if ~isfield(obj.axes, 'data')
@@ -73,6 +70,9 @@ classdef GUI < handle
             set(obj.menu.agilent{1,2}, 'callback', @obj.load);
             set(obj.menu.agilent{1,3}, 'callback', @obj.load);
             
+            % Menu - File --> Load --> Thermo
+            set(obj.menu.thermo{1,2}, 'callback', @obj.load); 
+            
             % Menu - File --> Load --> netCDF
             set(obj.menu.netcdf{1,2}, 'callback', @obj.load); 
             
@@ -82,7 +82,7 @@ classdef GUI < handle
             
             % Checkbox - View Options
             set(obj.figure.checkbox.stacked, 'callback', {@obj.plots, 'options.stacked'});
-            set(obj.figure.checkbox.normalized, 'callback', {@obj.plots, 'options.normalized'});
+            set(obj.figure.checkbox.normalized, 'callback', {@obj.plots, 'update.all'});
         end
     end
 end

@@ -79,7 +79,7 @@ switch options
         
         % Determine available ions from selected samples
         for i = 1:length(samples)
-            ions{i} = obj.data(samples(i)).mass_values;
+            ions{i} = obj.data(samples(i)).mz;
         end
         
         % Filter and sort ions
@@ -140,8 +140,11 @@ switch options
             
             % Retreive TIC values
             samples = current(add);
-            time = {obj.data(samples).time_values};
-            tic = {obj.data(samples).total_intensity_values};
+            time = {obj.data(samples).time};
+            
+            for i = 1:length(samples)
+                tic{i} = obj.data(samples(i)).tic.values;
+            end
             
             % Determine selected ions
             ions = obj.axes.index.ions.current;
@@ -152,12 +155,12 @@ switch options
             for i = 1:length(samples)
                 
                 % Check XIC values
-                mass = ismember(obj.data(samples(i)).mass_values, ions);
+                mass = ismember(obj.data(samples(i)).mz, ions);
         
                 % Assign XIC values
                 if sum(mass) >= 1
-                    xic{i} = obj.data(samples(i)).intensity_values(:, mass);
-                    mz{i} = obj.data(samples(i)).mass_values(mass);
+                    xic{i} = obj.data(samples(i)).xic.values(:, mass);
+                    mz{i} = obj.data(samples(i)).mz(mass);
                 else
                     xic{i} = [];
                     mz{i} = [];
@@ -172,6 +175,10 @@ switch options
             end
         end
         
+        % Update plot
+        obj = obj.plots('update.tic');
+        obj = obj.plots('update.sim');
+ 
     % Update values of selected ions
     case 'update.ions'
         
@@ -201,7 +208,7 @@ switch options
         for i = 1:length(obj.axes.data)
             
             % Remove deselected data
-            if ~isempty(previous(remove))
+            if ~isempty(previous(remove)) && ~isempty(obj.axes.data(i).xic)
                obj.axes.data(i).xic(:,remove) = [];
                obj.axes.data(i).mz(remove) = [];
             end
@@ -220,12 +227,12 @@ switch options
                 
                 % Check XIC values
                 samples = obj.axes.index.samples.current(i);
-                mass = ismember(obj.data(samples).mass_values, current(add));
+                mass = ismember(obj.data(samples).mz, current(add));
 
                 % Assign XIC values
                 if sum(mass) >= 1
-                    xic = obj.data(samples).intensity_values(:, mass);
-                    mz = obj.data(samples).mass_values(1, mass);
+                    xic = obj.data(samples).xic.values(:, mass);
+                    mz = obj.data(samples).mz(1, mass);
                 else
                     xic = [];
                     mz = [];

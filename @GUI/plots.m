@@ -74,16 +74,56 @@ switch options
         
         % Set plot data
         for i = 1:length(obj.axes.data)
-            plot(tic.x{i}, tic.y{i}, 'parent', obj.axes.tic, 'linewidth', 2, 'color', [1,1,1/i]);
-            plot(xic.x{i}, xic.y{i}, 'parent', obj.axes.xic, 'linewidth', 2, 'color', [1,1,1/i]);
+            
+            if ~isempty(tic.y{i})
+                plot(tic.x{i}, tic.y{i}, 'parent', obj.axes.tic, 'linewidth', 1.5);
+            end
+            
+            if ~isempty(xic.y{i})
+                plot(xic.x{i}, xic.y{i}, 'parent', obj.axes.xic, 'linewidth', 1.5);
+            end
+            
             hold all
         end
         
     % Update total ion chromatograms
     case 'update.tic'
         
+        obj = obj.plots('options.stacked');
+        obj = obj.plots('options.normalized');
+        
+        tic = get(obj.axes.tic, 'userdata');
+        
+        cla(obj.axes.tic);
+        
+        % Set plot data
+        for i = 1:length(obj.axes.data)
+            plot(tic.x{i}, tic.y{i}, 'parent', obj.axes.tic, 'linewidth', 1.5);
+            hold all
+        end
+        
+        
     % Update ion chromatograms
     case 'update.sim'
+        
+        obj = obj.plots('options.stacked');
+        obj = obj.plots('options.normalized');
+        
+        xic = get(obj.axes.xic, 'userdata');
+        
+        cla(obj.axes.xic);
+        
+        % Set plot data
+        for i = 1:length(obj.axes.data)
+            
+            if isempty(xic.y{i})
+                continue
+            else
+                plot(xic.x{i}, xic.y{i}, 'parent', obj.axes.xic, 'linewidth', 1.5);
+                hold all
+            end
+        end
+        
         
     % Set plot positioning option
     case 'options.stacked'
