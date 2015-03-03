@@ -79,8 +79,8 @@ switch options
             table{i,1} = i;
             
             % Set second column to 'File'
-            file = obj.data(i).file_name;
-            type = obj.data(i).file_type;
+            file = obj.data(i).file.name;
+            type = obj.data(i).file.type;
             
             % Remove file extension
             table{i,2} = file(1:end - length(type));

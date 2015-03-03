@@ -5,6 +5,12 @@ function obj = setup(obj, varargin)
 
     % Figure
     function obj = set_figure(obj, varargin)
+
+        % Create figure
+        obj.figure.figure = figure('Name', '');
+        
+        % Options
+        obj = settings(obj);
         
         % Variables
         screensize = obj.options.screensize;
@@ -15,8 +21,8 @@ function obj = setup(obj, varargin)
         figure_position(1) = (screensize(3) - figure_position(3)) / 2;
         figure_position(2) = (screensize(4) - figure_position(4)) / 2;
  
-        % Create figure
-        obj.figure.figure = figure('Name', '', 'Position', figure_position);
+        % Set figure position
+        set(obj.figure.figure, 'Position', figure_position);
     end
 
     % Menus
@@ -33,6 +39,10 @@ function obj = setup(obj, varargin)
         obj.menu.agilent{2} = uimenu(obj.menu.agilent{1}, 'Label', '.D');
         obj.menu.agilent{3} = uimenu(obj.menu.agilent{1}, 'Label', '.MS');
 
+        % File --> Load --> Thermo
+        obj.menu.thermo{1} = uimenu(obj.menu.load, 'Label', 'Thermo');
+        obj.menu.thermo{2} = uimenu(obj.menu.thermo{1}, 'Label', '.RAW');
+        
         % File --> Load --> netCDF
         obj.menu.netcdf{1} = uimenu(obj.menu.load, 'Label', 'netCDF');
         obj.menu.netcdf{2} = uimenu(obj.menu.netcdf{1}, 'Label', '.CDF');
